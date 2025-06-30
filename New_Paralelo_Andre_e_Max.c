@@ -49,6 +49,7 @@ typedef struct
     unsigned char genes[CHROMOSOME_LENGTH];
     int regs[NUM_REGS];
     int age_regs[NUM_REGS]; // Apenas para fim de anotação dos valores antigos e atualizados de registradores
+    int age_pcs[MAX_STEPS]; // Armazenar o PC apos executar, apenas para fim de anotação no txt
     int fitness;
 } Individuo;
 
@@ -310,7 +311,8 @@ int avaliar(Individuo *ind, int Tipo_Fitness)
     }
 
     while (steps < MAX_STEPS && pc < NUM_INSTRUCOES)
-    {
+    {   
+        ind->age_pcs[steps] = pc;
         pc = executa_instrucao(&ind->genes[pc * BITS_INSTRUCAO], ind->regs, pc);
         steps++;
     }
@@ -321,6 +323,15 @@ int avaliar(Individuo *ind, int Tipo_Fitness)
     }
 
     return calcula_fitness(ind->regs, Tipo_Fitness);
+}
+
+/*Zerar o vetor que armazena o PC*/
+void zerar_pcs(Individuo *ind)
+{
+    for(int i=0; i<MAX_STEPS; i++)
+    {
+        ind->age_pcs[i] = 0;
+    }
 }
 
 /* Ao mesmo tempo que executa as instruções de cada indivíduo, salva suas informações*/
@@ -367,9 +378,11 @@ void salvar_todas_geracoes(int geracao, int salvar)
             int r2 = (ind->genes[pos + 6] << 1) | ind->genes[pos + 7];
 
             fprintf(f, "%s R%d, R%d\n", ops[opcode], r1, r2);
-            pc = executa_instrucao(&ind->genes[pos], ind->regs, pc);
+            pc = ind->age_regs[steps];
             steps++;
         }
+
+        zerar_pcs(ind);
 
         if (salvar == TRUE)
         {
