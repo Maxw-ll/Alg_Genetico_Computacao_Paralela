@@ -196,6 +196,21 @@ int calcula_fitness(int *regs, int tipo)
     }
     return resultado;
 }
+/*Função para Normalizar os valores dos registradores, uma vez que como cada registrador é um inteiro em si, precisamos garantir que o valor dentro dele esteja no intervalo correto*/
+void nomralized_regs(int *regs)
+{
+    for (int i = 0; i < NUM_REGS; i++)
+    {
+        if (regs[i] < 0)
+        {
+            regs[i] = 0;
+        }
+        else if (regs[i] >= (int)pow(2, BITS_REG))
+        {
+            regs[i] = (int)pow(2, BITS_REG) - 1;
+        }
+    }
+}
 
 /*
 Tabela de Operações:
@@ -219,18 +234,6 @@ Código | Instrução   | Descrição
  15    | NOP         | Não faz nada
 */
 
-void nomralized_regs(int *regs)
-{
-    for (int i=0; i<NUM_REGS; i++)
-    {
-        if (regs[i] < 0)
-        {
-            regs[i] = 0;
-        } 
-        else if (regs[i] > (int)pow(2, BITS_REG))
-    }
-}
-
 /*Executa uma Instrução com base na Tabela*/
 int executa_instrucao(unsigned char *instrucao, int *regs, int pc)
 {
@@ -241,16 +244,16 @@ int executa_instrucao(unsigned char *instrucao, int *regs, int pc)
 
     switch (opcode)
     {
-    case 0: //ADD
+    case 0: // ADD
         regs[r1] += regs[r2];
         break;
-    case 1: //SUB
+    case 1: // SUB
         regs[r1] -= regs[r2];
         break;
-    case 2: //MULT
+    case 2: // MULT
         regs[r1] *= regs[r2];
         break;
-    case 3: //DIV 
+    case 3: // DIV
         if (regs[r2])
         {
             regs[r1] /= regs[r2];
@@ -262,33 +265,33 @@ int executa_instrucao(unsigned char *instrucao, int *regs, int pc)
             regs[r1] %= regs[r2];
         }
         break;
-    case 5: //INC
+    case 5: // INC
         regs[r1]++;
         break;
-    case 6: //DEC
+    case 6: // DEC
         regs[r1]--;
         break;
-    case 7: //MOV
+    case 7: // MOV
         regs[r1] = regs[r2];
         break;
-    case 8: //NOT
+    case 8: // NOT
         regs[r1] = ~regs[r1];
         break;
-    case 9: //GT
+    case 9: // GT
         regs[r1] = (regs[r1] > regs[r2]) ? TRUE : FALSE;
         break;
-    case 10: //LT
+    case 10: // LT
         regs[r1] = (regs[r1] < regs[r2]) ? TRUE : FALSE;
         break;
-    case 11: //EQ
+    case 11: // EQ
         regs[r1] = (regs[r1] == regs[r2]) ? TRUE : FALSE;
         break;
     case 12: // JMP
-        return regs[r1] % NUM_INSTRUCOES; 
+        return regs[r1] % NUM_INSTRUCOES;
     case 13: // JZ
-        return (regs[r1] == 0) ? regs[r2] % NUM_INSTRUCOES : pc + 1; 
+        return (regs[r1] == 0) ? regs[r2] % NUM_INSTRUCOES : pc + 1;
     case 14: // JNZ
-        return (regs[r1] != 0) ? regs[r2] % NUM_INSTRUCOES : pc + 1; 
+        return (regs[r1] != 0) ? regs[r2] % NUM_INSTRUCOES : pc + 1;
     case 15:
         break; // NOP
     }
@@ -296,26 +299,21 @@ int executa_instrucao(unsigned char *instrucao, int *regs, int pc)
     return pc + 1;
 }
 
-int avaliar(Individuo *ind)
+/*Função para avaliar um Indivíduo -> Executar suas instruções e calcular o Fitness*/
+int avaliar(Individuo *ind, int Tipo_Fitness)
 {
-    int regs[NUM_REGS];
-    for (int i = 0; i < NUM_REGS; i++)
-    {
-        int pos = NUM_INSTRUCOES * BITS_INSTRUCAO + i * BITS_REG;
-        int local = 0;
-        for (int b = 0; b < BITS_REG; b++)
-        {
-            local = (local << 1) | ind->genes[pos + b];
-        }
-        regs[i] = entrada_global[i] + local;
-    }
+
     int pc = 0, steps = 0;
-    while (steps++ < MAX_STEPS && pc < NUM_INSTRUCOES)
+    while (steps < MAX_STEPS && pc < NUM_INSTRUCOES)
     {
-        pc = executa_instrucao(&ind->genes[pc * BITS_INSTRUCAO], regs, pc);
+        pc = executa_instrucao(&ind->genes[pc * BITS_INSTRUCAO], &ind->regs, pc);
+        steps++;
     }
+
     if (steps >= MAX_STEPS)
+    {
         return PENALIDADE_LOOP;
+    }
     return calcula_fitness_F1(regs);
 }
 
