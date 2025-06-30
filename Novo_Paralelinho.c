@@ -11,6 +11,20 @@
 #define TRUE 1
 #define FALSE 0
 
+/*Código Funções de Fitness*/
+#define F1 1
+#define F2 2
+#define F3 3
+#define F4 4
+#define F5 5
+
+/*Resultados Esperados pra cada Função de Fitness*/
+#define RESULT_F1 0
+#define RESULT_F2 TRUE
+#define RESULT_F3 TRUE
+#define RESULT_F4 TRUE
+#define RESULT_F5 0
+
 /*Quantidade Registradores Locais*/
 #define NUM_REGS 4
 /*Quantidade de Instruções que compõem o Cromossomo*/
@@ -131,10 +145,10 @@ int calcula_fitness(int *regs, int tipo)
     int resultado = 0;
     switch (tipo)
     {
-    case 1: /* A + B = C + D*/
+    case F1: /* A + B = C + D*/
         resultado = abs((regs[0] + regs[1]) - (regs[2] + regs[3]));
         break;
-    case 2: /* A + B > C - D*/
+    case F2: /* A + B > C - D*/
         if ((regs[0] + regs[1]) > regs[2] - regs[3])
         {
             resultado = TRUE;
@@ -144,7 +158,7 @@ int calcula_fitness(int *regs, int tipo)
             resultado = FALSE;
         }
         break;
-    case 3: /* A % B == 0 -> B divide A*/
+    case F3: /* A % B == 0 -> B divide A*/
         if (regs[1] != 0 && regs[0] % regs[1] == 0)
         {
             resultado = TRUE;
@@ -154,7 +168,7 @@ int calcula_fitness(int *regs, int tipo)
             resultado = FALSE;
         }
         break;
-    case 4: /* A=B+1 && B=C+1 && C=D+1 */
+    case F4: /* A=B+1 && B=C+1 && C=D+1 */
         if (regs[0] == regs[1] + 1 && regs[1] == regs[2] + 1 && regs[2] == regs[3] + 1)
         {
             resultado = TRUE;
@@ -164,7 +178,7 @@ int calcula_fitness(int *regs, int tipo)
             resultado = FALSE;
         }
         break;
-    case 5: /*CH(A)+CH(B)+CH(C)+CH(D)+CH(A) = "OTIMO"*/
+    case F5: /*CH(A)+CH(B)+CH(C)+CH(D)+CH(A) = "OTIMO"*/
     {
         char alvo[] = {'O', 'T', 'I', 'M', 'O'};
         int match = 0;
@@ -183,63 +197,102 @@ int calcula_fitness(int *regs, int tipo)
     return resultado;
 }
 
+/*
+Tabela de Operações:
+Código | Instrução   | Descrição
+------------------------------------------
+  0    | ADD R1,R2   | R1 = R1 + R2
+  1    | SUB R1,R2   | R1 = R1 - R2
+  2    | MUL R1,R2   | R1 = R1 * R2
+  3    | DIV R1,R2   | R1 = R1 / R2 (se R2 ≠ 0)
+  4    | MOD R1,R2   | R1 = R1 % R2 (se R2 ≠ 0)
+  5    | INC R1      | R1 = R1 + 1
+  6    | DEC R1      | R1 = R1 - 1
+  7    | MOV R1,R2   | R1 = R2
+  8    | NOT R1      | R1 = ~R1
+  9    | GT R1,R2    | R1 = (R1 > R2) ? 1 : 0
+ 10    | LT R1,R2    | R1 = (R1 < R2) ? 1 : 0
+ 11    | EQ R1,R2    | R1 = (R1 == R2) ? 1 : 0
+ 12    | JMP R1      | Salta para instrução no índice R1 % NUM_INSTRUCOES
+ 13    | JZ R1,R2    | Se R1 == 0, salta para índice R2 % NUM_INSTRUCOES; senão, PC++
+ 14    | JNZ R1,R2   | Se R1 ≠ 0, salta para índice R2 % NUM_INSTRUCOES; senão, PC++
+ 15    | NOP         | Não faz nada
+*/
+
+void nomralized_regs(int *regs)
+{
+    for (int i=0; i<NUM_REGS; i++)
+    {
+        if (regs[i] < 0)
+        {
+            regs[i] = 0;
+        } 
+        else if (regs[i] > (int)pow(2, BITS_REG))
+    }
+}
+
+/*Executa uma Instrução com base na Tabela*/
 int executa_instrucao(unsigned char *instrucao, int *regs, int pc)
 {
+    // Transformamos os bits em inteiros. Os 4 primeiros bits geram o opcode e os 4 seguintes, os registradores que serão utilizados na instrução
     int opcode = (instrucao[0] << 3) | (instrucao[1] << 2) | (instrucao[2] << 1) | instrucao[3];
     int r1 = (instrucao[4] << 1) | instrucao[5];
     int r2 = (instrucao[6] << 1) | instrucao[7];
 
-    opcode %= 16;
-
     switch (opcode)
     {
-    case 0:
+    case 0: //ADD
         regs[r1] += regs[r2];
         break;
-    case 1:
+    case 1: //SUB
         regs[r1] -= regs[r2];
         break;
-    case 2:
+    case 2: //MULT
         regs[r1] *= regs[r2];
         break;
-    case 3:
+    case 3: //DIV 
         if (regs[r2])
+        {
             regs[r1] /= regs[r2];
+        }
         break;
-    case 4:
+    case 4: // MOD
         if (regs[r2])
+        {
             regs[r1] %= regs[r2];
+        }
         break;
-    case 5:
+    case 5: //INC
         regs[r1]++;
         break;
-    case 6:
+    case 6: //DEC
         regs[r1]--;
         break;
-    case 7:
+    case 7: //MOV
         regs[r1] = regs[r2];
         break;
-    case 8:
+    case 8: //NOT
         regs[r1] = ~regs[r1];
         break;
-    case 9:
-        regs[r1] = (regs[r1] > regs[r2]) ? 1 : 0;
+    case 9: //GT
+        regs[r1] = (regs[r1] > regs[r2]) ? TRUE : FALSE;
         break;
-    case 10:
-        regs[r1] = (regs[r1] < regs[r2]) ? 1 : 0;
+    case 10: //LT
+        regs[r1] = (regs[r1] < regs[r2]) ? TRUE : FALSE;
         break;
-    case 11:
-        regs[r1] = (regs[r1] == regs[r2]) ? 1 : 0;
+    case 11: //EQ
+        regs[r1] = (regs[r1] == regs[r2]) ? TRUE : FALSE;
         break;
-    case 12:
-        return regs[r1] % NUM_INSTRUCOES; // JMP
-    case 13:
-        return (regs[r1] == 0) ? regs[r2] % NUM_INSTRUCOES : pc + 1; // JZ
-    case 14:
-        return (regs[r1] != 0) ? regs[r2] % NUM_INSTRUCOES : pc + 1; // JNZ
+    case 12: // JMP
+        return regs[r1] % NUM_INSTRUCOES; 
+    case 13: // JZ
+        return (regs[r1] == 0) ? regs[r2] % NUM_INSTRUCOES : pc + 1; 
+    case 14: // JNZ
+        return (regs[r1] != 0) ? regs[r2] % NUM_INSTRUCOES : pc + 1; 
     case 15:
         break; // NOP
     }
+    normalized_regs(regs);
     return pc + 1;
 }
 
