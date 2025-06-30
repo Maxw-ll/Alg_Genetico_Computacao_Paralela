@@ -1,0 +1,88 @@
+Individuo 0 
+Registradores -> Valores Iniciais: R0=240 R1=151 R2=95 R3=190 
+Instrucoes:
+DEC R3, R0
+NOP R2, R3
+INC R3, R1
+DEC R2, R0
+Registradores -> Valores Finais: R0=240 R1=151 R2=93 R3=190 
+Fitness Final: 107
+
+--------------------------
+Individuo 1 
+Registradores -> Valores Iniciais: R0=179 R1=12 R2=6 R3=249 
+Instrucoes:
+DEC R3, R0
+NOP R2, R3
+INC R3, R1
+DEC R2, R0
+Registradores -> Valores Finais: R0=179 R1=12 R2=4 R3=249 
+Fitness Final: 63
+
+--------------------------
+Individuo 2 
+Registradores -> Valores Iniciais: R0=175 R1=79 R2=214 R3=250 
+Instrucoes:
+DEC R3, R0
+NOP R2, R3
+INC R3, R1
+DEC R2, R0
+Registradores -> Valores Finais: R0=175 R1=79 R2=212 R3=250 
+Fitness Final: 209
+
+--------------------------
+Individuo 3 
+Registradores -> Valores Iniciais: R0=151 R1=24 R2=60 R3=202 
+Instrucoes:
+DEC R3, R0
+NOP R2, R3
+INC R3, R1
+DEC R2, R0
+Registradores -> Valores Finais: R0=151 R1=24 R2=58 R3=202 
+Fitness Final: 86
+
+--------------------------
+Individuo 4 
+Registradores -> Valores Iniciais: R0=94 R1=90 R2=232 R3=172 
+Instrucoes:
+DEC R3, R0
+NOP R2, R3
+INC R3, R1
+DEC R2, R0
+Registradores -> Valores Finais: R0=94 R1=90 R2=230 R3=172 
+Fitness Final: 219
+
+--------------------------
+Individuo 5 
+Registradores -> Valores Iniciais: R0=77 R1=17 R2=125 R3=0 
+Instrucoes:
+DEC R3, R0
+NOP R2, R3
+INC R3, R1
+DEC R2, R0
+Registradores -> Valores Finais: R0=77 R1=17 R2=123 R3=1 
+Fitness Final: 31
+
+--------------------------
+Individuo 6 
+Registradores -> Valores Iniciais: R0=83 R1=59 R2=141 R3=103 
+Instrucoes:
+DEC R3, R0
+NOP R2, R3
+INC R3, R1
+DEC R2, R0
+Registradores -> Valores Finais: R0=83 R1=59 R2=139 R3=103 
+Fitness Final: 101
+
+--------------------------
+Individuo 7 
+Registradores -> Valores Iniciais: R0=156 R1=36 R2=196 R3=40 
+Instrucoes:
+DEC R3, R0
+NOP R2, R3
+INC R3, R1
+DEC R2, R0
+Registradores -> Valores Finais: R0=156 R1=36 R2=194 R3=40 
+Fitness Final: 43
+
+--------------------------

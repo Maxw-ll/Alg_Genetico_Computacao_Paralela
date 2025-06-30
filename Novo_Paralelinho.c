@@ -20,9 +20,9 @@
 
 /*Resultados Esperados pra cada Função de Fitness*/
 #define RESULT_F1 0
-#define RESULT_F2 TRUE
-#define RESULT_F3 TRUE
-#define RESULT_F4 TRUE
+#define RESULT_F2 0
+#define RESULT_F3 0
+#define RESULT_F4 0
 #define RESULT_F5 0
 
 /*Quantidade Registradores Locais*/
@@ -36,7 +36,7 @@
 /*O Cromossomo é composto apenas pelas instruções, que modificarão seus Registradores Locais*/
 #define CHROMOSOME_LENGTH (NUM_INSTRUCOES * BITS_INSTRUCAO)
 /*Tamanho da População*/
-#define TAMPOP 5
+#define TAMPOP 8
 /*Quantidade Máxima de Gerações*/
 #define MAXGER 20
 /*Taxa de Cruzamento*/
@@ -55,10 +55,11 @@ typedef struct
 {
     unsigned char genes[CHROMOSOME_LENGTH];
     int regs[NUM_REGS];
+    int age_regs[NUM_REGS]; // Apenas para fim de anotação dos valores antigos e atualizados de registradores
     int fitness;
 } Individuo;
 
-/*Inicia uma população de Indivíduos */
+/*Inicia uma população de Indivíduos e Nova, que servirá para adicionar os indívudos novos com base na anterior. Depois nova_pop é copiada para pop*/
 Individuo pop[TAMPOP], nova_pop[TAMPOP];
 
 /*Gera um Indivíduo Aleatório -> Com Bits todos Aleatórios*/
@@ -95,6 +96,7 @@ void mutacao(Individuo *ind)
         }
         break;
         case 1:
+        {
             /*Sorteia uma Instrução e reescreve de forma aleatória*/
             int instr_index = rand() % NUM_INSTRUCOES;
             int base = instr_index * BITS_INSTRUCAO;
@@ -102,9 +104,10 @@ void mutacao(Individuo *ind)
             {
                 ind->genes[base + j] = rand() % 2;
             }
-            break;
+        }
+        break;
         case 2:
-
+        {
             /*Troca uma Instrução com outra, escolhidas aleatoriamente. Pode ser sorteada a mesma*/
             int i1 = rand() % NUM_INSTRUCOES;
             int i2 = rand() % NUM_INSTRUCOES;
@@ -116,6 +119,7 @@ void mutacao(Individuo *ind)
                 ind->genes[base_i1 + j] = ind->genes[base_i2 + j];
                 ind->genes[base_i2 + j] = temp;
             }
+        }
         }
     }
 }
@@ -151,31 +155,31 @@ int calcula_fitness(int *regs, int tipo)
     case F2: /* A + B > C - D*/
         if ((regs[0] + regs[1]) > regs[2] - regs[3])
         {
-            resultado = TRUE;
+            resultado = 0;
         }
         else
         {
-            resultado = FALSE;
+            resultado = (int)pow(2, BITS_REG) - 1;
         }
         break;
     case F3: /* A % B == 0 -> B divide A*/
         if (regs[1] != 0 && regs[0] % regs[1] == 0)
         {
-            resultado = TRUE;
+            resultado = 0;
         }
         else
         {
-            resultado = FALSE;
+            resultado = (int)pow(2, BITS_REG) - 1;
         }
         break;
     case F4: /* A=B+1 && B=C+1 && C=D+1 */
         if (regs[0] == regs[1] + 1 && regs[1] == regs[2] + 1 && regs[2] == regs[3] + 1)
         {
-            resultado = TRUE;
+            resultado = 0;
         }
         else
         {
-            resultado = FALSE;
+            resultado = (int)pow(2, BITS_REG) - 1;
         }
         break;
     case F5: /*CH(A)+CH(B)+CH(C)+CH(D)+CH(A) = "OTIMO"*/
@@ -196,8 +200,9 @@ int calcula_fitness(int *regs, int tipo)
     }
     return resultado;
 }
+
 /*Função para Normalizar os valores dos registradores, uma vez que como cada registrador é um inteiro em si, precisamos garantir que o valor dentro dele esteja no intervalo correto*/
-void nomralized_regs(int *regs)
+void normalized_regs(int *regs)
 {
     for (int i = 0; i < NUM_REGS; i++)
     {
@@ -304,9 +309,16 @@ int avaliar(Individuo *ind, int Tipo_Fitness)
 {
 
     int pc = 0, steps = 0;
+
+    /*Copiar os valores antigos dos registradores para fim de anotação*/
+    for (int i = 0; i < NUM_REGS; i++)
+    {
+        ind->age_regs[i] = ind->regs[i];
+    }
+
     while (steps < MAX_STEPS && pc < NUM_INSTRUCOES)
     {
-        pc = executa_instrucao(&ind->genes[pc * BITS_INSTRUCAO], &ind->regs, pc);
+        pc = executa_instrucao(&ind->genes[pc * BITS_INSTRUCAO], ind->regs, pc);
         steps++;
     }
 
@@ -314,9 +326,11 @@ int avaliar(Individuo *ind, int Tipo_Fitness)
     {
         return PENALIDADE_LOOP;
     }
-    return calcula_fitness_F1(regs);
+
+    return calcula_fitness(ind->regs, Tipo_Fitness);
 }
 
+/* Ao mesmo tempo que executa as instruções de cada indivíduo, salva suas informações*/
 void salvar_todas_geracoes(int geracao)
 {
     char nome[64];
@@ -328,62 +342,47 @@ void salvar_todas_geracoes(int geracao)
 
     for (int idx = 0; idx < TAMPOP; idx++)
     {
+
         Individuo *ind = &pop[idx];
-        int regs[NUM_REGS];
-        int locais[NUM_REGS];
 
-        fprintf(f, "Individuo %d | Fitness: %d\n", idx, ind->fitness);
+        fprintf(f, "Individuo %d \n", idx);
 
-        fprintf(f, "Registradores globais: ");
-        for (int i = 0; i < NUM_REGS; i++)
-            fprintf(f, "R%d=%d ", i, entrada_global[i]);
-        fprintf(f, "\n");
-
-        fprintf(f, "Registradores locais (genes): ");
+        fprintf(f, "Registradores -> Valores Iniciais: ");
         for (int i = 0; i < NUM_REGS; i++)
         {
-            int pos = NUM_INSTRUCOES * BITS_INSTRUCAO + i * BITS_REG;
-            int local = 0;
-            for (int b = 0; b < BITS_REG; b++)
-            {
-                local = (local << 1) | ind->genes[pos + b];
-            }
-            locais[i] = local;
-            fprintf(f, "R%d=%d ", i, local);
-        }
-        fprintf(f, "\n");
-
-        fprintf(f, "Registradores iniciais: ");
-        for (int i = 0; i < NUM_REGS; i++)
-        {
-            regs[i] = entrada_global[i] + locais[i];
-            fprintf(f, "R%d=%d ", i, regs[i]);
+            fprintf(f, "R%d=%d ", i, ind->age_regs[i]);
         }
         fprintf(f, "\n");
 
         fprintf(f, "Instrucoes:\n");
         int pc = 0, steps = 0;
-        while (steps++ < NUM_INSTRUCOES * 2 && pc < NUM_INSTRUCOES)
+        /*Executa as instruções do indivíduo e anota o processo*/
+        while (steps < MAX_STEPS && pc < NUM_INSTRUCOES)
         {
             int pos = pc * BITS_INSTRUCAO;
-            int opcode = (ind->genes[pos] << 3) | (ind->genes[pos + 1] << 2) |
-                         (ind->genes[pos + 2] << 1) | ind->genes[pos + 3];
+            int opcode = (ind->genes[pos] << 3) | (ind->genes[pos + 1] << 2) | (ind->genes[pos + 2] << 1) | ind->genes[pos + 3];
             int r1 = (ind->genes[pos + 4] << 1) | ind->genes[pos + 5];
             int r2 = (ind->genes[pos + 6] << 1) | ind->genes[pos + 7];
-            opcode %= 16;
+
             fprintf(f, "%s R%d, R%d\n", ops[opcode], r1, r2);
-            pc = executa_instrucao(&ind->genes[pos], regs, pc);
+            pc = executa_instrucao(&ind->genes[pos], ind->regs, pc);
+            steps++;
         }
 
-        fprintf(f, "Registradores finais: ");
+        fprintf(f, "Registradores -> Valores Finais: ");
         for (int i = 0; i < NUM_REGS; i++)
-            fprintf(f, "R%d=%d ", i, regs[i]);
+        {
+            fprintf(f, "R%d=%d ", i, ind->regs[i]);
+        }
+        fprintf(f, "\n");
+        fprintf(f, "Fitness Final: %d\n", ind->fitness);
         fprintf(f, "\n--------------------------\n");
     }
 
     fclose(f);
 }
 
+/* Torneio para Escolher melhor Indivíduo dentre dois escolhidos aleatoriamente*/
 int torneio()
 {
     int a = rand() % TAMPOP;
@@ -391,20 +390,35 @@ int torneio()
     return (pop[a].fitness < pop[b].fitness) ? a : b;
 }
 
-void avaliar_populacao()
+/*Aplicar o fitness em toda a população*/
+void avaliar_populacao(int Tipo_Fitness)
 {
     for (int i = 0; i < TAMPOP; i++)
     {
-        pop[i].fitness = avaliar(&pop[i]);
+        pop[i].fitness = avaliar(&pop[i], Tipo_Fitness);
     }
 }
 
+/*Copiar Indivíduo para outro Novo*/
 void copiar_individuo(Individuo *src, Individuo *dst)
 {
     memcpy(dst->genes, src->genes, CHROMOSOME_LENGTH);
     dst->fitness = src->fitness;
 }
 
+/* Após cada Nova geração ser gerada, os valores de todos os registradores são aleatorizados*/
+void gerar_novas_entradas()
+{
+    for (int i = 0; i < TAMPOP; i++)
+    {
+        for (int j = 0; j < NUM_REGS; j++)
+        {
+            pop[i].regs[j] = rand() % (int)pow(2, BITS_REG);
+        }
+    }
+}
+
+/*Gerar uma Nova geração a partir da Anterior*/
 void nova_geracao()
 {
     int i = 0;
@@ -414,17 +428,20 @@ void nova_geracao()
         if (pop[j].fitness <= pop[melhor].fitness)
             melhor = j;
     }
-    int regs_temp[NUM_REGS];
-    for (int i = 0; i < NUM_REGS; i++)
-        regs_temp[i] = entrada_global[i];
-    int pc = 0, steps = 0;
-    while (steps++ < NUM_INSTRUCOES * 2 && pc < NUM_INSTRUCOES)
-        pc = executa_instrucao(&pop[melhor].genes[pc * BITS_INSTRUCAO], regs_temp, pc);
-    for (int i = 0; i < NUM_REGS; i++)
-        entrada_global[i] = regs_temp[i];
+    /*Comentando pra ver se n da M*/
+    // int regs_temp[NUM_REGS];
+    // for (int i = 0; i < NUM_REGS; i++)
+    //     regs_temp[i] = entrada_global[i];
+    // int pc = 0, steps = 0;
+    // while (steps++ < NUM_INSTRUCOES * 2 && pc < NUM_INSTRUCOES)
+    //     pc = executa_instrucao(&pop[melhor].genes[pc * BITS_INSTRUCAO], regs_temp, pc);
+    // for (int i = 0; i < NUM_REGS; i++)
+    //     entrada_global[i] = regs_temp[i];
 
     if (ELITISMO)
+    {
         copiar_individuo(&pop[melhor], &nova_pop[i++]);
+    }
     while (i < TAMPOP)
     {
         int p1 = torneio();
@@ -441,30 +458,36 @@ void nova_geracao()
         }
         mutacao(&f1);
         mutacao(&f2);
-        nova_pop[i++] = f1;
+        nova_pop[i] = f1;
+        i++;
         if (i < TAMPOP)
-            nova_pop[i++] = f2;
+            nova_pop[i] = f2;
+        i++;
     }
+
     for (int i = 0; i < TAMPOP; i++)
         copiar_individuo(&nova_pop[i], &pop[i]);
+    
+    gerar_novas_entradas();
 }
 
 int main()
 {
     srand(time(NULL));
-    for (int i = 0; i < NUM_REGS; i++)
-        entrada_global[i] = rand() % (int)pow(2, BITS_REG);
-    ;
+
+    int tipo_fitness = F1;
+    int result_fitness = RESULT_F1;
 
     for (int i = 0; i < TAMPOP; i++)
+    {
         gera_individuo(&pop[i]);
-    avaliar_populacao();
+    }
+
+    avaliar_populacao(tipo_fitness);
 
     for (int g = 0; g < MAXGER; g++)
     {
         salvar_todas_geracoes(g);
-        nova_geracao();
-        avaliar_populacao();
         int melhor = 0;
         for (int i = 1; i < TAMPOP; i++)
         {
@@ -472,6 +495,9 @@ int main()
                 melhor = i;
         }
         printf("Ger %d | Melhor fitness: %d\n", g, pop[melhor].fitness);
+
+        nova_geracao();
+        avaliar_populacao(tipo_fitness);
     }
 
     return 0;
