@@ -144,27 +144,27 @@ int calcula_fitness(int *regs, int tipo)
             resultado = FALSE;
         }
         break;
-    case 3:
+    case 3: /* A % B == 0 -> B divide A*/
         if (regs[1] != 0 && regs[0] % regs[1] == 0)
         {
-            resultado = 0;
+            resultado = TRUE;
         }
         else
         {
-            resultado = abs(regs[0] % (regs[1] + 1));
+            resultado = FALSE;
         }
         break;
-    case 4:
+    case 4: /* A=B+1 && B=C+1 && C=D+1 */
         if (regs[0] == regs[1] + 1 && regs[1] == regs[2] + 1 && regs[2] == regs[3] + 1)
         {
-            resultado = 0;
+            resultado = TRUE;
         }
         else
         {
-            resultado = 1000;
+            resultado = FALSE;
         }
         break;
-    case 5:
+    case 5: /*CH(A)+CH(B)+CH(C)+CH(D)+CH(A) = "OTIMO"*/
     {
         char alvo[] = {'O', 'T', 'I', 'M', 'O'};
         int match = 0;
@@ -179,9 +179,6 @@ int calcula_fitness(int *regs, int tipo)
         resultado = 5 - match;
         break;
     }
-    default:
-        resultado = abs((regs[0] + regs[1]) - (regs[2] + regs[3]));
-        break;
     }
     return resultado;
 }
