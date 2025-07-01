@@ -1,0 +1,124 @@
+Individuo 0 
+Cromossomo: 00111010101100001000111100001000
+Registradores -> Valores Iniciais: R0=9 R1=20 R2=7 R3=0 
+Instrucoes:
+DIV R2, R2
+EQ R0, R0
+NOT R3, R3
+ADD R2, R0
+Registradores -> Valores Finais: R0=1 R1=20 R2=2 R3=0 
+Fitness Final: 19
+
+--------------------------
+Individuo 1 
+Cromossomo: 00111010101100001000111100001000
+Registradores -> Valores Iniciais: R0=8 R1=6 R2=5 R3=7 
+Instrucoes:
+DIV R2, R2
+EQ R0, R0
+NOT R3, R3
+ADD R2, R0
+Registradores -> Valores Finais: R0=1 R1=6 R2=2 R3=0 
+Fitness Final: 5
+
+--------------------------
+Individuo 2 
+Cromossomo: 11011110011111101001001000010000
+Registradores -> Valores Iniciais: R0=0 R1=17 R2=0 R3=0 
+Instrucoes:
+JZ R3, R2
+JZ R3, R2
+JZ R3, R2
+JZ R3, R2
+JZ R3, R2
+JZ R3, R2
+JZ R3, R2
+JZ R3, R2
+Registradores -> Valores Finais: R0=0 R1=17 R2=0 R3=0 
+Fitness Final: 999999
+
+--------------------------
+Individuo 3 
+Cromossomo: 11111010101111101111100001110000
+Registradores -> Valores Iniciais: R0=0 R1=8 R2=0 R3=10 
+Instrucoes:
+NOP R2, R2
+EQ R3, R2
+NOP R2, R0
+MOV R0, R0
+Registradores -> Valores Finais: R0=0 R1=8 R2=0 R3=0 
+Fitness Final: 8
+
+--------------------------
+Individuo 4 
+Cromossomo: 00011110011111101001001000010000
+Registradores -> Valores Iniciais: R0=1 R1=17 R2=0 R3=0 
+Instrucoes:
+SUB R3, R2
+MOV R3, R2
+GT R0, R2
+SUB R0, R0
+Registradores -> Valores Finais: R0=0 R1=17 R2=0 R3=0 
+Fitness Final: 17
+
+--------------------------
+Individuo 5 
+Cromossomo: 00111010111111101111100001110000
+Registradores -> Valores Iniciais: R0=34 R1=3 R2=16 R3=9 
+Instrucoes:
+DIV R2, R2
+NOP R3, R2
+NOP R2, R0
+MOV R0, R0
+Registradores -> Valores Finais: R0=34 R1=3 R2=1 R3=9 
+Fitness Final: 27
+
+--------------------------
+Individuo 6 
+Cromossomo: 01111111101100001000111100001000
+Registradores -> Valores Iniciais: R0=28 R1=7 R2=30 R3=4 
+Instrucoes:
+MOV R3, R3
+EQ R0, R0
+NOT R3, R3
+ADD R2, R0
+Registradores -> Valores Finais: R0=1 R1=7 R2=31 R3=0 
+Fitness Final: 23
+
+--------------------------
+Individuo 7 
+Cromossomo: 00111010101111101111100001110000
+Registradores -> Valores Iniciais: R0=6 R1=8 R2=0 R3=10 
+Instrucoes:
+DIV R2, R2
+EQ R3, R2
+NOP R2, R0
+MOV R0, R0
+Registradores -> Valores Finais: R0=6 R1=8 R2=0 R3=0 
+Fitness Final: 14
+
+--------------------------
+Individuo 8 
+Cromossomo: 00111010101100001000111100001000
+Registradores -> Valores Iniciais: R0=10 R1=9 R2=7 R3=8 
+Instrucoes:
+DIV R2, R2
+EQ R0, R0
+NOT R3, R3
+ADD R2, R0
+Registradores -> Valores Finais: R0=1 R1=9 R2=2 R3=0 
+Fitness Final: 8
+
+--------------------------
+Individuo 9 
+Cromossomo: 01111111111111101111100001110000
+Registradores -> Valores Iniciais: R0=11 R1=58 R2=15 R3=15 
+Instrucoes:
+MOV R3, R3
+NOP R3, R2
+NOP R2, R0
+MOV R0, R0
+Registradores -> Valores Finais: R0=11 R1=58 R2=15 R3=15 
+Fitness Final: 39
+
+--------------------------

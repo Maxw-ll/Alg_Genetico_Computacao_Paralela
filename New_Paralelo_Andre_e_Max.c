@@ -29,9 +29,9 @@
 /*O Cromossomo é composto apenas pelas instruções, que modificarão seus Registradores Locais*/
 #define CHROMOSOME_LENGTH (NUM_INSTRUCOES * BITS_INSTRUCAO)
 /*Tamanho da População*/
-#define TAMPOP 5
+#define TAMPOP 10
 /*Quantidade Máxima de Gerações*/
-#define MAXGER 100
+#define MAXGER 20
 /*Taxa de Cruzamento*/
 #define TAXCRUZ 0.8
 /*Taxa de Mutação*/
@@ -298,11 +298,22 @@ int executa_instrucao(unsigned char *instrucao, int *regs, int pc)
     return pc + 1;
 }
 
+/*Zerar o vetor que armazena o PC*/
+void zerar_pcs(Individuo *ind)
+{
+    for (int i = 0; i < MAX_STEPS; i++)
+    {
+        ind->age_pcs[i] = PENALIDADE_LOOP;
+    }
+}
+
 /*Função para avaliar um Indivíduo -> Executar suas instruções e calcular o Fitness*/
 int avaliar(Individuo *ind, int Tipo_Fitness)
 {
 
     int pc = 0, steps = 0;
+
+    zerar_pcs(ind);
 
     /*Copiar os valores antigos dos registradores para fim de anotação*/
     for (int i = 0; i < NUM_REGS; i++)
@@ -311,7 +322,7 @@ int avaliar(Individuo *ind, int Tipo_Fitness)
     }
 
     while (steps < MAX_STEPS && pc < NUM_INSTRUCOES)
-    {   
+    {
         ind->age_pcs[steps] = pc;
         pc = executa_instrucao(&ind->genes[pc * BITS_INSTRUCAO], ind->regs, pc);
         steps++;
@@ -325,17 +336,9 @@ int avaliar(Individuo *ind, int Tipo_Fitness)
     return calcula_fitness(ind->regs, Tipo_Fitness);
 }
 
-/*Zerar o vetor que armazena o PC*/
-void zerar_pcs(Individuo *ind)
-{
-    for(int i=0; i<MAX_STEPS; i++)
-    {
-        ind->age_pcs[i] = 0;
-    }
-}
 
 /* Ao mesmo tempo que executa as instruções de cada indivíduo, salva suas informações*/
-void salvar_todas_geracoes(int geracao, int salvar)
+void salvar_todas_geracoes(int geracao)
 {
     const char *ops[] = {
         "ADD", "SUB", "MUL", "DIV", "MOD", "INC", "DEC", "MOV",
@@ -348,27 +351,33 @@ void salvar_todas_geracoes(int geracao, int salvar)
     for (int idx = 0; idx < TAMPOP; idx++)
     {
         Individuo *ind = &pop[idx];
-        if (salvar == TRUE)
+
+        fprintf(f, "Individuo %d \n", idx);
+
+        fprintf(f, "Cromossomo: ");
+
+        for (int i = 0; i < CHROMOSOME_LENGTH; i++)
         {
-
-            fprintf(f, "Individuo %d \n", idx);
-
-            fprintf(f, "Cromossomo: ");
-
-            for (int i = 0; i < CHROMOSOME_LENGTH; i++)
-            {
-                fprintf(f, "%d", ind->genes[i]);
-            }
-            fprintf(f, "\nRegistradores -> Valores Iniciais: ");
-            for (int i = 0; i < NUM_REGS; i++)
-            {
-                fprintf(f, "R%d=%d ", i, ind->age_regs[i]);
-            }
-            fprintf(f, "\n");
-
-            fprintf(f, "Instrucoes:\n");
+            fprintf(f, "%d", ind->genes[i]);
         }
+        fprintf(f, "\nRegistradores -> Valores Iniciais: ");
+        for (int i = 0; i < NUM_REGS; i++)
+        {
+            fprintf(f, "R%d=%d ", i, ind->age_regs[i]);
+        }
+        fprintf(f, "\n");
+
+        fprintf(f, "Instrucoes:\n");
+
         int pc = 0, steps = 0;
+
+        // if (idx == 1)
+        // {
+        //     for(int i=0; i<MAX_STEPS; i++)
+        //     {
+        //         printf("PC[%d] -> %d ", i, ind->age_pcs[i]);
+        //     }
+        // }
         /*Executa as instruções do indivíduo e anota o processo*/
         while (steps < MAX_STEPS && pc < NUM_INSTRUCOES)
         {
@@ -376,25 +385,22 @@ void salvar_todas_geracoes(int geracao, int salvar)
             int opcode = (ind->genes[pos] << 3) | (ind->genes[pos + 1] << 2) | (ind->genes[pos + 2] << 1) | ind->genes[pos + 3];
             int r1 = (ind->genes[pos + 4] << 1) | ind->genes[pos + 5];
             int r2 = (ind->genes[pos + 6] << 1) | ind->genes[pos + 7];
-
+            
             fprintf(f, "%s R%d, R%d\n", ops[opcode], r1, r2);
-            pc = ind->age_regs[steps];
             steps++;
+            pc = ind->age_pcs[steps];
         }
 
         zerar_pcs(ind);
 
-        if (salvar == TRUE)
+        fprintf(f, "Registradores -> Valores Finais: ");
+        for (int i = 0; i < NUM_REGS; i++)
         {
-            fprintf(f, "Registradores -> Valores Finais: ");
-            for (int i = 0; i < NUM_REGS; i++)
-            {
-                fprintf(f, "R%d=%d ", i, ind->regs[i]);
-            }
-            fprintf(f, "\n");
-            fprintf(f, "Fitness Final: %d\n", ind->fitness);
-            fprintf(f, "\n--------------------------\n");
+            fprintf(f, "R%d=%d ", i, ind->regs[i]);
         }
+        fprintf(f, "\n");
+        fprintf(f, "Fitness Final: %d\n", ind->fitness);
+        fprintf(f, "\n--------------------------\n");
     }
 
     fclose(f);
@@ -455,15 +461,6 @@ void nova_geracao()
         if (pop[j].fitness <= pop[melhor].fitness)
             melhor = j;
     }
-    /*Comentando pra ver se n da M*/
-    // int regs_temp[NUM_REGS];
-    // for (int i = 0; i < NUM_REGS; i++)
-    //     regs_temp[i] = entrada_global[i];
-    // int pc = 0, steps = 0;
-    // while (steps++ < NUM_INSTRUCOES * 2 && pc < NUM_INSTRUCOES)
-    //     pc = executa_instrucao(&pop[melhor].genes[pc * BITS_INSTRUCAO], regs_temp, pc);
-    // for (int i = 0; i < NUM_REGS; i++)
-    //     entrada_global[i] = regs_temp[i];
 
     if (ELITISMO)
     {
@@ -518,7 +515,7 @@ int main()
 
     for (int g = 0; g < MAXGER; g++)
     {
-        salvar_todas_geracoes(g, TRUE);
+        salvar_todas_geracoes(g);
         int melhor = 0;
         for (int i = 1; i < TAMPOP; i++)
         {
