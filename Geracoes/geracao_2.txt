@@ -1,64 +1,120 @@
 Individuo 0 
-Cromossomo: 10000000110110001001010000010000
-Registradores -> Valores Iniciais: R0=0 R1=48 R2=0 R3=121 
+Cromossomo: 01011111111110011010000000111011
+Registradores -> Valores Iniciais: R0=67 R1=7 R2=0 R3=97 
 Instrucoes:
-NOT R0, R0
-JZ R2, R0
-NOT R0, R0
-JZ R2, R0
-NOT R0, R0
-JZ R2, R0
-NOT R0, R0
-JZ R2, R0
-Registradores -> Valores Finais: R0=0 R1=48 R2=0 R3=121 
-Fitness Final: 999999
+INC R3, R3
+NOP R2, R1
+LT R0, R0
+DIV R2, R3
+Registradores -> Valores Finais: R0=0 R1=7 R2=0 R3=98 
+Fitness Final: 91
 
 --------------------------
 Individuo 1 
-Cromossomo: 10000000100110100100100111110111
-Registradores -> Valores Iniciais: R0=0 R1=0 R2=1 R3=51 
+Cromossomo: 10110100000100100010010101110000
+Registradores -> Valores Iniciais: R0=163 R1=211 R2=96 R3=97 
 Instrucoes:
-NOT R0, R0
-GT R2, R2
-MOD R2, R1
-NOP R1, R3
-Registradores -> Valores Finais: R0=0 R1=0 R2=0 R3=51 
-Fitness Final: 51
+EQ R1, R0
+SUB R0, R2
+MUL R1, R1
+MOV R0, R0
+Registradores -> Valores Finais: R0=67 R1=0 R2=96 R3=97 
+Fitness Final: 126
 
 --------------------------
 Individuo 2 
-Cromossomo: 10110010110110001001010000010000
-Registradores -> Valores Iniciais: R0=4 R1=2 R2=237 R3=0 
+Cromossomo: 10110100000100100010010101110000
+Registradores -> Valores Iniciais: R0=112 R1=115 R2=141 R3=0 
 Instrucoes:
-EQ R0, R2
-JZ R2, R0
-GT R1, R0
-SUB R0, R0
-Registradores -> Valores Finais: R0=0 R1=1 R2=237 R3=0 
-Fitness Final: 236
+EQ R1, R0
+SUB R0, R2
+MUL R1, R1
+MOV R0, R0
+Registradores -> Valores Finais: R0=0 R1=0 R2=141 R3=0 
+Fitness Final: 141
 
 --------------------------
 Individuo 3 
-Cromossomo: 10000000110110001001100111110111
-Registradores -> Valores Iniciais: R0=0 R1=4 R2=82 R3=0 
+Cromossomo: 10110100000100100010010101110000
+Registradores -> Valores Iniciais: R0=128 R1=63 R2=255 R3=245 
 Instrucoes:
-NOT R0, R0
-JZ R2, R0
-GT R2, R1
-NOP R1, R3
-Registradores -> Valores Finais: R0=0 R1=4 R2=0 R3=0 
-Fitness Final: 3
+EQ R1, R0
+SUB R0, R2
+MUL R1, R1
+MOV R0, R0
+Registradores -> Valores Finais: R0=0 R1=0 R2=255 R3=245 
+Fitness Final: 500
 
 --------------------------
 Individuo 4 
-Cromossomo: 10110010100110100100010000010000
-Registradores -> Valores Iniciais: R0=8 R1=118 R2=0 R3=0 
+Cromossomo: 10110100000100100010010101110000
+Registradores -> Valores Iniciais: R0=0 R1=9 R2=190 R3=231 
 Instrucoes:
-EQ R0, R2
-GT R2, R2
-MOD R1, R0
-SUB R0, R0
-Registradores -> Valores Finais: R0=0 R1=0 R2=0 R3=0 
-Fitness Final: 118
+EQ R1, R0
+SUB R0, R2
+MUL R1, R1
+MOV R0, R0
+Registradores -> Valores Finais: R0=0 R1=0 R2=190 R3=231 
+Fitness Final: 421
+
+--------------------------
+Individuo 5 
+Cromossomo: 10110100000100100010010101110000
+Registradores -> Valores Iniciais: R0=10 R1=16 R2=15 R3=0 
+Instrucoes:
+EQ R1, R0
+SUB R0, R2
+MUL R1, R1
+MOV R0, R0
+Registradores -> Valores Finais: R0=0 R1=0 R2=15 R3=0 
+Fitness Final: 15
+
+--------------------------
+Individuo 6 
+Cromossomo: 10110100000100100010010101110000
+Registradores -> Valores Iniciais: R0=6 R1=6 R2=3 R3=15 
+Instrucoes:
+EQ R1, R0
+SUB R0, R2
+MUL R1, R1
+MOV R0, R0
+Registradores -> Valores Finais: R0=3 R1=1 R2=3 R3=15 
+Fitness Final: 14
+
+--------------------------
+Individuo 7 
+Cromossomo: 00010010101101000010000001111110
+Registradores -> Valores Iniciais: R0=137 R1=10 R2=19 R3=179 
+Instrucoes:
+SUB R0, R2
+EQ R1, R0
+MUL R0, R0
+MOV R3, R2
+Registradores -> Valores Finais: R0=255 R1=0 R2=19 R3=19 
+Fitness Final: 217
+
+--------------------------
+Individuo 8 
+Cromossomo: 11111110010011111111010101110000
+Registradores -> Valores Iniciais: R0=0 R1=3 R2=0 R3=8 
+Instrucoes:
+NOP R3, R2
+MOD R3, R3
+NOP R1, R1
+MOV R0, R0
+Registradores -> Valores Finais: R0=0 R1=3 R2=0 R3=0 
+Fitness Final: 3
+
+--------------------------
+Individuo 9 
+Cromossomo: 00001010100111110001100001111110
+Registradores -> Valores Iniciais: R0=0 R1=81 R2=0 R3=18 
+Instrucoes:
+ADD R2, R2
+GT R3, R3
+SUB R2, R0
+MOV R3, R2
+Registradores -> Valores Finais: R0=0 R1=81 R2=0 R3=0 
+Fitness Final: 81
 
 --------------------------

@@ -1,72 +1,120 @@
 Individuo 0 
-Cromossomo: 10000000110110001001100111110111
-Registradores -> Valores Iniciais: R0=0 R1=41 R2=0 R3=116 
+Cromossomo: 11111110010011111111010101110000
+Registradores -> Valores Iniciais: R0=4 R1=16 R2=0 R3=97 
 Instrucoes:
-NOT R0, R0
-JZ R2, R0
-NOT R0, R0
-JZ R2, R0
-NOT R0, R0
-JZ R2, R0
-NOT R0, R0
-JZ R2, R0
-Registradores -> Valores Finais: R0=0 R1=41 R2=0 R3=116 
-Fitness Final: 999999
+NOP R3, R2
+MOD R3, R3
+NOP R1, R1
+MOV R0, R0
+Registradores -> Valores Finais: R0=4 R1=16 R2=0 R3=0 
+Fitness Final: 20
 
 --------------------------
 Individuo 1 
-Cromossomo: 10110010100110100100010001110111
-Registradores -> Valores Iniciais: R0=0 R1=10 R2=0 R3=56 
+Cromossomo: 11111110100001101111010101110000
+Registradores -> Valores Iniciais: R0=68 R1=0 R2=98 R3=107 
 Instrucoes:
-EQ R0, R2
-GT R2, R2
-MOD R1, R0
-MOV R1, R3
-Registradores -> Valores Finais: R0=0 R1=56 R2=0 R3=56 
-Fitness Final: 1
+NOP R3, R2
+NOT R1, R2
+NOP R1, R1
+MOV R0, R0
+Registradores -> Valores Finais: R0=68 R1=0 R2=98 R3=107 
+Fitness Final: 137
 
 --------------------------
 Individuo 2 
-Cromossomo: 10000000100110100100100110010000
-Registradores -> Valores Iniciais: R0=0 R1=2 R2=238 R3=0 
+Cromossomo: 01011111111110011010000000111011
+Registradores -> Valores Iniciais: R0=4 R1=0 R2=140 R3=3 
 Instrucoes:
-NOT R0, R0
-GT R2, R2
-MOD R2, R1
-GT R0, R0
-Registradores -> Valores Finais: R0=0 R1=2 R2=0 R3=0 
-Fitness Final: 2
+INC R3, R3
+NOP R2, R1
+LT R0, R0
+DIV R2, R3
+Registradores -> Valores Finais: R0=0 R1=0 R2=35 R3=4 
+Fitness Final: 39
 
 --------------------------
 Individuo 3 
-Cromossomo: 10110010110110001001010000010000
-Registradores -> Valores Iniciais: R0=5 R1=3 R2=0 R3=7 
+Cromossomo: 10110100000101111111010101110000
+Registradores -> Valores Iniciais: R0=0 R1=0 R2=249 R3=253 
 Instrucoes:
-EQ R0, R2
-JZ R2, R0
-EQ R0, R2
-JZ R2, R0
-JZ R2, R0
-JZ R2, R0
-JZ R2, R0
-JZ R2, R0
-Registradores -> Valores Finais: R0=1 R1=3 R2=0 R3=7 
-Fitness Final: 999999
+EQ R1, R0
+SUB R1, R3
+NOP R1, R1
+MOV R0, R0
+Registradores -> Valores Finais: R0=0 R1=0 R2=249 R3=253 
+Fitness Final: 502
 
 --------------------------
 Individuo 4 
-Cromossomo: 10110010110110001001010000010000
-Registradores -> Valores Iniciais: R0=5 R1=7 R2=0 R3=9 
+Cromossomo: 11111110010010100010010101110000
+Registradores -> Valores Iniciais: R0=0 R1=0 R2=200 R3=237 
 Instrucoes:
-EQ R0, R2
-JZ R2, R0
-EQ R0, R2
-JZ R2, R0
-JZ R2, R0
-JZ R2, R0
-JZ R2, R0
-JZ R2, R0
-Registradores -> Valores Finais: R0=1 R1=7 R2=0 R3=9 
-Fitness Final: 999999
+NOP R3, R2
+MOD R2, R2
+MUL R1, R1
+MOV R0, R0
+Registradores -> Valores Finais: R0=0 R1=0 R2=0 R3=237 
+Fitness Final: 237
+
+--------------------------
+Individuo 5 
+Cromossomo: 01011111111110011010000000111011
+Registradores -> Valores Iniciais: R0=0 R1=0 R2=21 R3=1 
+Instrucoes:
+INC R3, R3
+NOP R2, R1
+LT R0, R0
+DIV R2, R3
+Registradores -> Valores Finais: R0=0 R1=0 R2=10 R3=2 
+Fitness Final: 12
+
+--------------------------
+Individuo 6 
+Cromossomo: 10011111000010100001100001111110
+Registradores -> Valores Iniciais: R0=0 R1=0 R2=0 R3=24 
+Instrucoes:
+GT R3, R3
+ADD R2, R2
+SUB R2, R0
+MOV R3, R2
+Registradores -> Valores Finais: R0=0 R1=0 R2=0 R3=0 
+Fitness Final: 0
+
+--------------------------
+Individuo 7 
+Cromossomo: 10110100000100100010100001111110
+Registradores -> Valores Iniciais: R0=255 R1=8 R2=10 R3=16 
+Instrucoes:
+EQ R1, R0
+SUB R0, R2
+MUL R2, R0
+MOV R3, R2
+Registradores -> Valores Finais: R0=245 R1=0 R2=255 R3=255 
+Fitness Final: 265
+
+--------------------------
+Individuo 8 
+Cromossomo: 00001010100111110001010101110000
+Registradores -> Valores Iniciais: R0=0 R1=0 R2=0 R3=0 
+Instrucoes:
+ADD R2, R2
+GT R3, R3
+SUB R1, R1
+MOV R0, R0
+Registradores -> Valores Finais: R0=0 R1=0 R2=0 R3=0 
+Fitness Final: 0
+
+--------------------------
+Individuo 9 
+Cromossomo: 00001010100111110001100001111110
+Registradores -> Valores Iniciais: R0=0 R1=76 R2=2 R3=0 
+Instrucoes:
+ADD R2, R2
+GT R3, R3
+SUB R2, R0
+MOV R3, R2
+Registradores -> Valores Finais: R0=0 R1=76 R2=4 R3=4 
+Fitness Final: 68
 
 --------------------------
