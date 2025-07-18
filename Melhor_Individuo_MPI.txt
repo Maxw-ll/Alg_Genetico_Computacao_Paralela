@@ -1,0 +1,12 @@
+Individuo 277 
+Cromossomo: 01101000011010100110110101101001
+Registradores -> Valores Iniciais: R0=79 R1=84 R2=76 R3=78 
+Instrucoes:
+DEC R2, R0
+DEC R2, R2
+DEC R3, R1
+DEC R2, R1
+Registradores -> Valores Finais: R0=79 R1=84 R2=73 R3=77 
+Fitness Final: 0
+
+--------------------------
