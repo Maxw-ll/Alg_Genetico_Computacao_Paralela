@@ -9,6 +9,9 @@
 #include <time.h>
 #include <math.h>
 
+
+
+
 #define NUM_REGS 4          //numero de registradores locais
 #define NUM_INSTRUCOES 4   //numero de instruções por individuo
 #define BITS_INSTRUCAO 8    //quantidade de bits por instrução, sendo 4 para operação, e 4 para os dois operandos
